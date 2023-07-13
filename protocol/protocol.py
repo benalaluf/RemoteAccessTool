@@ -38,8 +38,15 @@ class SendPacket:
 class HandelPacket(ABC):
 
     @abstractmethod
-    def _recv_packet(self, sock):
+    def recv_packet(self, sock):
         pass
+
+    def _recv_data_lenght(self, sock):
+        raw_data_lenght = self._recvall(sock, 4)
+        if not raw_data_lenght:
+            return None
+        datalen = struct.unpack('>I', raw_data_lenght)[0]
+        return self._recvall(sock, datalen)
 
     def _recvall(self, sock, data_len):
         data = bytearray()
