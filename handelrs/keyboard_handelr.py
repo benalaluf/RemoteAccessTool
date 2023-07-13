@@ -3,8 +3,8 @@ from input_control.keystroke_control import KeyStrokes
 
 class HandelKeyboard:
 
-    #example
     @staticmethod
-    def handel(payload):
+    def handel(payload: bytes):
         payload = payload.decode()
+        payload = payload.split()
         KeyStrokes.play(payload)

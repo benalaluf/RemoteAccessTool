@@ -6,12 +6,17 @@ class KeyStrokes:
 
     @staticmethod
     def record():
-        return keyboard.read_event()
+        event = str(keyboard.read_event())
+        event = event.removeprefix(r'KeyboardEvent(')
+        event = event.removesuffix(')')
+        return event
 
     @staticmethod
-    def play(event):
-        keyboard.play((event,))
+    def play(event: list):
+        key = event[0]
+        state = event[1]
 
-
-if __name__ == '__main__':
-    keyboard.press_and_release('d')
+        if state == 'up':
+            keyboard.press(key)
+        if state == 'down':
+            keyboard.release(key)
