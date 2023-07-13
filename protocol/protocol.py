@@ -8,6 +8,7 @@ class PacketType(Enum):
     FRAME = 1
     KEYBOARD = 2
     MOUSE = 3
+    EXIT = 4294967295
 
 
 class Packet:

