@@ -37,21 +37,24 @@ class SendPacket:
 
 class HandelPacket:
 
-    def recv_packet_type(self, sock):
-        raw_type = self._recvall(sock, 4)
+    def recv_packet(self, sock):
+        return self.__recv_packet_type(sock), self.__recv_payload()
+
+    def __recv_packet_type(self, sock):
+        raw_type = self.__recvall(sock, 4)
         if not raw_type:
             return None
         type = struct.unpack('>I', raw_type)[0]
         return type
 
-    def _recv_payload(self, sock):
-        raw_data_lenght = self._recvall(sock, 4)
+    def __recv_payload(self, sock):
+        raw_data_lenght = self.__recvall(sock, 4)
         if not raw_data_lenght:
             return None
-        datalen = struct.unpack('>I', raw_data_lenght)[0]
-        return self._recvall(sock, datalen)
+        data_lenght = struct.unpack('>I', raw_data_lenght)[0]
+        return self.__recvall(sock, data_lenght)
 
-    def _recvall(self, sock, data_len):
+    def __recvall(self, sock, data_len):
         data = bytearray()
         while len(data) < data_len:
             packet = sock.recv(data_len - len(data))
