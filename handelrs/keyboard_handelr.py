@@ -5,7 +5,7 @@ class HandelKeyboard:
 
     @staticmethod
     def handel(payload: bytes):
-        print('handel keyboard')
         payload = payload.decode()
         payload = payload.split()
+        print(payload)
         KeyStrokes.play(payload)
