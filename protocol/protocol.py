@@ -35,13 +35,16 @@ class SendPacket:
         sock.sendall(bytes(packet))
 
 
-class HandelPacket(ABC):
+class HandelPacket:
 
-    @abstractmethod
-    def recv_packet(self, sock):
-        pass
+    def recv_packet_type(self, sock):
+        raw_type = self._recvall(sock, 4)
+        if not raw_type:
+            return None
+        type = struct.unpack('>I', raw_type)[0]
+        return type
 
-    def _recv_data_lenght(self, sock):
+    def _recv_payload(self, sock):
         raw_data_lenght = self._recvall(sock, 4)
         if not raw_data_lenght:
             return None
