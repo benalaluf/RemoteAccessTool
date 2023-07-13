@@ -1,7 +1,8 @@
 import socket
 import sys
+sys.path.append('..')
 import threading
-from ..input_control.keystroke_control import KeyStrokes
+from input_control.keystroke_control import KeyStrokes
 
 
 class Server:
@@ -32,4 +33,4 @@ class Server:
 
 if __name__ == '__main__':
     print('SERVER IS STARTING :)')
-    Server('192.168.1.125', 1111).start()
+    Server('192.168.1.125', 3333).start()

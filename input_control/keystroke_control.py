@@ -1,5 +1,4 @@
 import keyboard
-from keyboard import KeyboardEvent
 
 from protocol.protocol import *
 
@@ -33,4 +32,3 @@ class KeyStrokes:
                 packet = Packet(PacketType.KEYBOARD, keystroke.encode())
                 SendPacket.send_packet(sock, packet)
                 last_one = keystroke
-
