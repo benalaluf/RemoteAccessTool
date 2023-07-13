@@ -7,4 +7,5 @@ class HandelKeyboard:
     def handel(payload: bytes):
         payload = payload.decode()
         payload = payload.split()
+        print(payload)
         KeyStrokes.play(payload)
