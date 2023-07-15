@@ -28,6 +28,7 @@ class Server:
                 ScreenStream.receive_frame(self.stream_window, packet_payload, (1920, 1080), 'RGB')
 
     def start(self):
+        print('pok')
         self.server.listen()
         print(f'LISTENING... ({self.IP}:{self.PORT})')
         try:
@@ -46,4 +47,5 @@ if __name__ == '__main__':
 
     server = Server('192.168.1.129', 3333)
     thread = threading.Thread(target=server.start)
+    thread.start()
     server.stream_window.run()

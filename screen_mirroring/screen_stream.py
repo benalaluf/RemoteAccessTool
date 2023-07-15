@@ -16,5 +16,5 @@ class ScreenStream:
 
     @staticmethod
     def receive_frame(screen_window: ScreenWindow, payload: bytes, screen_size, screen_mode):
-        frame = ScreenCapture.bytes_to_frame(payload, screen_mode, screen_size)
+        frame = ScreenCapture.bytes_to_frame(bytes(payload), screen_mode, screen_size)
         screen_window.set_frame(frame)

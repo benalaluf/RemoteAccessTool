@@ -21,7 +21,7 @@ class ScreenCapture:
 
     @staticmethod
     def __image_from_bytes(bytes, screen_mode, screen_size):
-        return Image.frombytes(screen_mode, screen_size, bytes)
+        return Image.frombytes(screen_mode,screen_size, bytes)
 
     @staticmethod
     def __take_screenshot():
