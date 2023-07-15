@@ -1,3 +1,5 @@
+import threading
+import time
 import tkinter as tk
 from PIL import ImageTk, Image
 import requests
@@ -13,15 +15,14 @@ class ScreenWindow(metaclass=Singleton):
         self.window = tk.Tk()
         self.window.geometry('1920x1080')
 
-        self.label = tk.Label(self.window)
-        self.label.pack()
+        self.frame = tk.Label(self.window)
+        self.frame.pack()
 
+    def run(self):
         self.window.mainloop()
 
-    def set_frame(self):
-        self.label.image = ScreenCapture.frame_bytes(ScreenCapture.frame_bytes())
-
-if __name__ == '__main__':
-    
-    ScreenWindow()
+    def set_frame(self, frame):
+        self.frame.image = frame
+        self.frame.config(image=frame)
+        self.window.update()
 

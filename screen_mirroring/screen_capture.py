@@ -7,19 +7,26 @@ from PIL import ImageGrab, ImageTk, Image
 
 class ScreenCapture:
 
-    def __init__(self, screen_size, screen_mode):
-        self.screen_size = screen_size
-        self.screen_mode = screen_mode
-        self.current_screen = None
+    @staticmethod
+    def frame_bytes():
+        return ScreenCapture.__image_to_bytes(ScreenCapture.__take_screenshot())
 
-    def image_from_bytes(self, bytes):
-        return Image.frombytes(self.screen_mode, self.screen_size, bytes)
+    @staticmethod
+    def bytes_to_frame(bytes, screen_mode, screen_size):
+        return ScreenCapture.__image_to_tkImage(ScreenCapture.__image_from_bytes(bytes, screen_mode, screen_size))
 
-    def image_to_bytes(self, image):
+    @staticmethod
+    def __image_to_bytes(image):
         return image.tobytes()
 
-    def take_screenshot(self):
+    @staticmethod
+    def __image_from_bytes(bytes, screen_mode, screen_size):
+        return Image.frombytes(screen_mode, screen_size, bytes)
+
+    @staticmethod
+    def __take_screenshot():
         return ImageGrab.grab()
 
-    def frame_bytes(self):
-        return self.image_to_bytes(self.take_screenshot())
+    @staticmethod
+    def __image_to_tkImage(image):
+        return ImageTk.PhotoImage(image)
