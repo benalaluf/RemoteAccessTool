@@ -2,8 +2,6 @@ import threading
 import time
 import tkinter as tk
 from PIL import ImageTk, Image
-import requests
-from io import BytesIO
 
 from screen_mirroring.screen_capture import ScreenCapture
 from utils.singletone import Singleton

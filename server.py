@@ -5,9 +5,7 @@ from protocol.protocol import HandelPacket, PacketType
 from screen_mirroring.screen_stream import ScreenStream
 from screen_mirroring.screen_window import ScreenWindow
 
-sys.path.append('..')
 import threading
-from input_control.keystroke_control import KeyStrokes
 
 
 class Server:
@@ -25,7 +23,7 @@ class Server:
             packet_type, packet_payload = HandelPacket.recv_packet(conn)
 
             if packet_type == PacketType.FRAME.value:
-                ScreenStream.receive_frame(self.stream_window, packet_payload, (1920, 1080), 'RGB')
+                ScreenStream.receive_frame(self.stream_window, packet_payload)
 
     def start(self):
         print('pok')
@@ -45,7 +43,7 @@ class Server:
 if __name__ == '__main__':
     print('SERVER IS STARTING :)')
 
-    server = Server('192.168.1.129', 3333)
+    server = Server('192.168.1.108', 3333)
     thread = threading.Thread(target=server.start)
     thread.start()
     server.stream_window.run()
