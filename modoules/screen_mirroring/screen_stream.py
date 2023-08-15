@@ -1,8 +1,6 @@
-import threading
-
-from protocol.protocol import Packet, SendPacket, PacketType
-from screen_mirroring.screen_capture import ScreenCapture
-from screen_mirroring.screen_window import ScreenWindow
+from modoules.protocol import Packet, SendPacket, PacketType
+from modoules.screen_mirroring.screen_capture import ScreenCapture
+from modoules.screen_mirroring.screen_window import ScreenWindow
 
 
 class ScreenStream:

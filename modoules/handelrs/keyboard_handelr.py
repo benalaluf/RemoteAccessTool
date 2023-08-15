@@ -1,4 +1,4 @@
-from input_control.keystroke_control import KeyStrokes
+from modoules.input_control import KeyStrokes
 
 
 class HandelKeyboard:

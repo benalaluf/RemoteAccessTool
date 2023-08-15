@@ -1,0 +1,69 @@
+# Python-specific
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+*.venv/
+*.env/
+.env/
+
+# Compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# IDE-specific
+.vscode/
+.idea/
+*.code-workspace
+
+# Editor-specific temporary files
+*~
+*.swp
+
+# Logs
+*.log
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Dependencies
+/.venv/
+/.env/
+/node_modules/
+/bower_components/
+
+# Jupyter Notebook specific
+.ipynb_checkpoints/
+*.ipynb-meta
+
+# Data and media
+media/
+
+# Ignore config files with sensitive information
+config.py
+
+# Ignore project-specific settings
+server/config/server_config.py
+victim/config/client_config.py
+
+# Ignore generated files
+server/screen_casting_generated/
+victim/screen_received_images/
+
+# Ignore virtual environment files
+/.venv/
+/.env/
+
+# Ignore any backup or temporary files
+*.bak
+*.tmp
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db

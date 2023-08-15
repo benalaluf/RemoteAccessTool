@@ -1,9 +1,8 @@
 import socket
-import sys
 
-from protocol.protocol import HandelPacket, PacketType
-from screen_mirroring.screen_stream import ScreenStream
-from screen_mirroring.screen_window import ScreenWindow
+from modoules.protocol.protocol import HandelPacket, PacketType
+from modoules.screen_mirroring.screen_stream import ScreenStream
+from modoules.screen_mirroring.screen_window import ScreenWindow
 
 import threading
 
@@ -17,6 +16,8 @@ class Server:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(self.ADDR)
         self.stream_window = ScreenWindow()
+        self.stream_window.s
+        self.stream_window.run()
 
     def handel(self, conn):
         while True:
@@ -24,6 +25,7 @@ class Server:
 
             if packet_type == PacketType.FRAME.value:
                 ScreenStream.receive_frame(self.stream_window, packet_payload)
+
 
     def start(self):
         print('pok')
@@ -44,6 +46,5 @@ if __name__ == '__main__':
     print('SERVER IS STARTING :)')
 
     server = Server('192.168.1.108', 3333)
-    thread = threading.Thread(target=server.start)
-    thread.start()
+    server.start()
     server.stream_window.run()
