@@ -1,16 +1,15 @@
+import threading
 import tkinter as tk
 
-from utils.singletone import Singleton
-
-
-class ScreenWindow(metaclass=Singleton):
+#TODO add single tone
+class ScreenWindow(threading.Thread):
     def __init__(self):
         self.window = tk.Tk()
         self.window.geometry('1920x1080')
 
         self.frame = tk.Label(self.window)
         self.frame.pack()
-
+        threading.Thread.__init__(self)
     def run(self):
         self.window.mainloop()
 
