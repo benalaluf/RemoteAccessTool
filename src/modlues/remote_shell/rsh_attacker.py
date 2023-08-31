@@ -1,5 +1,5 @@
-from modlues.protocol.protocol import SendPacket
-from modlues.protocol.remote_shell_protocol import RemoteShellPacket, RemoteShellPacketType
+from src.modlues.protocols.protocol import SendPacket
+from src.modlues.protocols.remote_shell import RemoteShellPacket, RemoteShellPacketType
 
 
 class RemoteShellAttackerSide:

@@ -1,9 +1,6 @@
-import socket
-import struct
-from abc import ABC, abstractmethod
 from enum import Enum
 
-from modlues.protocol.protocol import Packet, PacketType
+from src.modlues.protocols.protocol import Packet, PacketType
 
 
 class RemoteShellPacketType(Enum):
