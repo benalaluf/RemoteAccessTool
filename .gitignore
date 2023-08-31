@@ -49,12 +49,12 @@ media/
 config.py
 
 # Ignore project-specific settings
-server/config/server_config.py
-victim/config/client_config.py
+_attacker/config/server_config.py
+_victim/config/client_config.py
 
 # Ignore generated files
-server/screen_casting_generated/
-victim/screen_received_images/
+_attacker/screen_casting_generated/
+_victim/screen_received_images/
 
 # Ignore virtual environment files
 /.venv/
