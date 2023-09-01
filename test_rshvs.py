@@ -1,5 +1,4 @@
-from src.modlues.remote_shell.victim_rsh import RemoteShellVictimSide
+import subprocess
 
-shell = RemoteShellVictimSide()
-
-shell.handle()
+result = subprocess.run(['cat', 'attacker_main.py'], capture_output=True)
+print(result.stdout.decode())

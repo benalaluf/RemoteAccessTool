@@ -11,5 +11,5 @@ class GeneralPacketType(Enum):
 
 
 class GeneralPacket(Packet):
-    def __init__(self, packet_sub_type: GeneralPacketType):
-        super().__init__(PacketType.GENERAL, packet_sub_type.value, PacketConstants.NO_DATA)
+    def __init__(self, packet_sub_type: GeneralPacketType, payload: bytes = PacketConstants.NO_DATA):
+        super().__init__(PacketType.GENERAL, packet_sub_type.value, payload)
