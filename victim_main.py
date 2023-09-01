@@ -1,4 +1,4 @@
-from connections.victim import Victim
+from src.connections.victim import Victim
 
 if __name__ == '__main__':
     victim = Victim("localhost", 6969).main()

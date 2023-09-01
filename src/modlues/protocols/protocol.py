@@ -1,6 +1,7 @@
 import socket
 import struct
 from abc import ABC, abstractmethod
+from ctypes import Union
 from enum import Enum
 
 
@@ -17,11 +18,20 @@ class PacketType(Enum):
 
 
 class Packet(ABC):
-    def __init__(self, packet_type: PacketType, packet_sub_type, payload: bytes):
+    def __init__(self, packet_type: Union(PacketType, int), packet_sub_type, payload: bytes):
         self.packet_type = packet_type
         self.packet_sub_type = packet_sub_type
         self.payload = payload
         self.packet_bytes = bytes()
+
+    @classmethod
+    def from_bytes(cls, byte: bytes):
+        packet_type = struct.unpack(PacketConstants.TYPE_HEADER_FORMAT, byte[0])[0]
+        packet_sub_type = struct.unpack(PacketConstants.TYPE_HEADER_FORMAT, byte[1])[0]
+        data_len = struct.unpack(PacketConstants.TYPE_HEADER_FORMAT, byte[2:])[0]
+        payload = byte[data_len:]
+
+        return cls(packet_type, packet_sub_type, payload)
 
     def __bytes__(self):
         return self._build_packet()
@@ -48,21 +58,19 @@ class HandelPacket:
 
     @staticmethod
     def recv_packet(sock):
-        packet_type, packet_sub_type, data_len = HandelPacket.__recv_packet_header(sock)
-        return packet_type, packet_sub_type, HandelPacket.__recv_all(sock, data_len)
+        return Packet.from_bytes(HandelPacket.__recv_raw_packet(sock))
 
     @staticmethod
-    def __recv_packet_header(sock):
+    def __recv_raw_packet(sock):
         raw_header = HandelPacket.__recv_all(sock, PacketConstants.HEADER_LENGTH)
 
         if not raw_header:
             return None
 
-        packet_type = struct.unpack(PacketConstants.TYPE_HEADER_FORMAT, raw_header[0])[0]
-        packet_sub_type = struct.unpack(PacketConstants.TYPE_HEADER_FORMAT, raw_header[1])[0]
         data_len = struct.unpack(PacketConstants.TYPE_HEADER_FORMAT, raw_header[2:])[0]
+        data = HandelPacket.__recv_all(sock, data_len)
 
-        return packet_type, packet_sub_type, data_len
+        return raw_header + data
 
     @staticmethod
     def __recv_all(sock, data_len):
