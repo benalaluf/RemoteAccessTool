@@ -1,2 +1,0 @@
-keyboard~=0.13.5
-Pillow~=9.4.0
