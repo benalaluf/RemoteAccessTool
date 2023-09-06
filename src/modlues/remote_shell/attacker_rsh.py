@@ -32,6 +32,7 @@ class RemoteShellAttackerSide:
                 pass
 
     def handle(self, packet: RemoteShellPacket):
+
         if packet.packet_sub_type == RemoteShellPacketType.OUTPUT.value:
             self.__print_in_light_blue(packet.payload.decode())
 

@@ -8,6 +8,7 @@ import tkinter as tk
 import inquirer
 
 from src.modlues.CLI.commmad_executer import CommandExecuter
+from src.modlues.CLI.print_enchanter import segement_print
 from src.modlues.protocols.victim_dataclass import VictimData
 from src.modlues.remote_shell.attacker_rsh import RemoteShellAttackerSide
 
@@ -63,12 +64,11 @@ class Attacker:
 
             self.command_executer.exec(command)
 
+    @segement_print
     def __show_connected_clients(self):
         print("Connected Victims - ")
-        print('-' * 20)
         for i, client in enumerate(self.connected_clients, start=1):
             print(f'{i}. {client.addr}')
-        print('-' * 20)
 
     def __choose_client(self):
         self.__show_connected_clients()
