@@ -43,6 +43,9 @@ class Packet:
     def __bytes__(self):
         return self._build_packet()
 
+    def __repr__(self):
+        return f"{self.packet_type}, {self.packet_sub_type}, {self.payload.decode()}"
+
     def _build_packet(self):
         self.packet_bytes = self._pack(PacketConstants.TYPE_HEADER_FORMAT, self.packet_type) + \
                             self._pack(PacketConstants.TYPE_HEADER_FORMAT, self.packet_sub_type) + \

