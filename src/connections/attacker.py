@@ -74,18 +74,25 @@ class Attacker:
 
         else:
             print("Theres No Connected Clients!!!")
+            return False
+        return True
 
     def __choose_victim(self):
-        self.__show_connected_victims()
-
-        victim_id = int(input("Enter Victim Id: "))
-        try:
-            if self.connected_victims[victim_id - 1]:
-                self.chosen_victim = self.connected_victims[victim_id - 1]
-            else:
+        is_victims =self.__show_connected_victims()
+        if is_victims:
+            try:
+                victim_id = int(input("Enter Victim Id: "))
+                if self.connected_victims[victim_id - 1]:
+                    self.chosen_victim = self.connected_victims[victim_id - 1]
+                else:
+                    print("Invalid Input")
+            except IndexError:
                 print("Invalid Input")
-        except IndexError:
-            print("Invalid Input")
+            except ValueError:
+                print("Invalid Input")
+
+
+
 
     def __start_remote_shell(self):
         if self.chosen_victim:
