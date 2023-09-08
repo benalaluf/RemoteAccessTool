@@ -43,6 +43,9 @@ class Packet:
     def __bytes__(self):
         return self._build_packet()
 
+    def __repr__(self):
+        return f"{self.packet_type}, {self.packet_sub_type}, {self.payload.decode()}"
+
     def _build_packet(self):
         self.packet_bytes = self._pack(PacketConstants.TYPE_HEADER_FORMAT, self.packet_type) + \
                             self._pack(PacketConstants.TYPE_HEADER_FORMAT, self.packet_sub_type) + \
@@ -89,3 +92,19 @@ class HandelPacket:
                 return None
             data.extend(packet)
         return data
+
+
+def is_socket_closed(sock: socket.socket):
+    try:
+        # this will try to read bytes without blocking and also without removing them from buffer (peek only)
+        data = sock.recv(16, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+        if len(data) == 0:
+            return True
+    except BlockingIOError:
+        return False  # socket is open and reading from it would block
+    except ConnectionResetError:
+        return True  # socket was closed for some other reason
+    except Exception as e:
+        print("unexpected exception when checking if a socket is closed", e)
+        return False
+    return False
